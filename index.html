@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>חידון פרקי אבות – השלם את המשפט</title>
+<style>
+:root{--gold:#c8963e;--deep:#4a2f27;--cream:#fdf6e7;--green:#2e7d32;--red:#c62828;}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:linear-gradient(160deg,#fdf6e7,#f7e7c6 60%,#efd9a8);color:var(--deep);min-height:100vh}
+.wrap{max-width:760px;margin:0 auto;padding:24px 16px 48px}
+header{text-align:center;margin-bottom:18px}
+h1{margin:0;font-size:clamp(1.6rem,4vw,2.3rem);color:#6b3f2a;text-shadow:0 1px 0 #fff}
+.subtitle{margin-top:6px;color:#7a5b3a}
+.card{background:#fff;border-radius:18px;padding:22px;box-shadow:0 8px 24px rgba(74,47,39,.15);border-top:6px solid var(--gold);animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.progress{height:10px;background:#eadfc7;border-radius:99px;overflow:hidden;margin-bottom:16px}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--gold),#a06a1f);transition:width .3s}
+.qnum{font-weight:700;color:#8a6a3b;margin-bottom:8px}
+.quote{font-size:1.25rem;line-height:1.7;background:#fbf3e0;border-radius:12px;padding:14px 16px;border-right:5px solid var(--gold)}
+.speaker{display:block;margin-top:8px;font-size:.85rem;color:#8a6a3b;font-style:italic}
+.options{display:grid;gap:10px;margin-top:18px}
+button.opt{text-align:right;font-size:1.05rem;line-height:1.5;padding:12px 14px;border-radius:12px;border:2px solid #e4d5b5;background:#fffdf7;cursor:pointer;transition:.15s}
+button.opt:hover:not(:disabled){border-color:var(--gold);transform:translateY(-1px)}
+button.opt.correct{background:#e6f4ea;border-color:var(--green);color:var(--green);font-weight:700}
+button.opt.wrong{background:#fdecea;border-color:var(--red);color:var(--red)}
+button.opt:disabled{cursor:default}
+.feedback{margin-top:14px;font-weight:700;min-height:24px}
+.next{margin-top:16px;background:var(--deep);color:#fff;border:none;border-radius:12px;padding:12px 22px;font-size:1rem;cursor:pointer;display:none}
+.next:hover{background:#5f3f33}
+.start,.again{display:block;margin:18px auto 0;background:var(--gold);border:none;color:#fff;font-size:1.1rem;font-weight:700;padding:14px 30px;border-radius:14px;cursor:pointer;box-shadow:0 6px 14px rgba(200,150,62,.35)}
+.start:hover,.again:hover{filter:brightness(1.05)}
+.score-big{font-size:3rem;font-weight:800;color:var(--gold)}
+.emoji{font-size:2.4rem}
+footer{text-align:center;margin-top:22px;font-size:.85rem;color:#8a6a3b}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>📜 חידון פרקי אבות</h1>
+<div class="subtitle">השלם את המשפט המפורסם – בחר את הסיום הנכון</div>
+</header>
+<div id="quiz" class="hidden">
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="card">
+<div class="qnum" id="qnum"></div>
+<div class="quote" id="quote"></div>
+<span class="speaker" id="speaker"></span>
+<div class="options" id="options"></div>
+<div class="feedback" id="feedback"></div>
+<button class="next" id="next">לשאלה הבאה ←</button>
+</div>
+</div>
+<div id="intro" class="card" style="text-align:center">
+<div class="emoji">📖✨</div>
+<h2>ברוכים הבאים לחידון!</h2>
+<p>יש 15 משפטים מפרקי אבות. בכל שאלה עליך לבחור את ההמשך הנכון של הציטוט.</p>
+<button class="start" id="start">מתחילים!</button>
+</div>
+<div id="result" class="card hidden" style="text-align:center">
+<div class="emoji" id="resultEmoji"></div>
+<h2>סיימת את החידון!</h2>
+<div class="score-big" id="scoreBig"></div>
+<p id="resultText"></p>
+<button class="again" id="again">משחקים שוב 🔁</button>
+</div>
+<footer>חידון קליל לכל המשפחה · פרקי אבות</footer>
+</div>
+<script>
+const QUESTIONS = [{"q": "הוו זהירין ברשות, שאין מקרבין לו לאדם אלא לצורך עצמן; ___", "speaker": "רבן גמליאל בנו של רבי יהודה הנשיא", "options": ["נראים כאוהבים בשעת הנאתן, ואין עומדין לו בשעת דחקו", "נראים כאוהבים בשעת שמחתן, ואין עומדין לו בשעת צרתו", "נראים כידידים בשעת הצלחתן, ואין עומדין לו בשעת עוניו", "נראים כמסייעים בשעת רצונם, ואין עומדין לו בשעת פחדו"], "answer": 0}, {"q": "אהוב את המלאכה, ושנא את הרבנות, ___", "speaker": "שמעיה", "options": ["ואל תתוודע לרשות", "ואל תתקרב לרשות", "ואל תיתן לבך לרשות", "ואל תלך אחר הרשות"], "answer": 0}, {"q": "אם אין אני לי, מי לי? ___", "speaker": "הלל", "options": ["וכשאני לעצמי, מה אני?", "וכשאני לבדי, אין אני?", "וכשאני עם אחרים, מי אני?", "וכשאין אני לאחרים, מה אני?"], "answer": 0}, {"q": "אמור מעט ועשה הרבה, ___", "speaker": "שמאי", "options": ["והוי מקבל כל אדם בסבר פנים יפות", "והוי מדבר עם כל אדם בדרך נכונה", "והוי מכבד כל אדם בכל עת", "והוי מקשיב לכל אדם בשקט"], "answer": 0}, {"q": "הסתכל בשלושה דברים ואין אתה בא לידי חטא: ___", "speaker": "עקביה בן מהללאל", "options": ["דע מאין באת, ולאן אתה הולך, ולפני מי אתה עתיד ליתן דין וחשבון", "דע מה יש לך, ומה חסר לך, ומה אתה עתיד לעשות", "דע מי בראך, ומי מוליכך, ומי מחכה לך", "דע מאין באת, ומה אתה עושה, ולאן אתה מגיע"], "answer": 0}, {"q": "כל ימיי גדלתי בין חכמים, ולא מצאתי לגוף טוב משתיקה; ___", "speaker": "רבן שמעון בן גמליאל", "options": ["ולא המדרש הוא העיקר אלא המעשה, וכל המרבה דברים מביא חטא", "ולא הלימוד הוא העיקר אלא השקט, וכל המרבה דיבור מביא עוני", "ולא הביטחון הוא העיקר אלא הזהירות, וכל המרבה שאלות מביא חטא", "ולא החכמה היא העיקר אלא הענווה, וכל המרבה מחשבות מביא חטא"], "answer": 0}, {"q": "הוי מקדים בשלום כל אדם; ___", "speaker": "רבי מתיה בן חרש", "options": ["והוי זנב לאריות, ואל תהי ראש לשועלים", "והוי ראש לאריות, ואל תהי זנב לשועלים", "והוי ידיד לאריות, ואל תהי אויב לשועלים", "והוי חכם בין אריות, ואל תהי טיפש בין שועלים"], "answer": 0}, {"q": "במקום שאין אנשים, ___", "speaker": "הלל", "options": ["השתדל להיות איש", "השתדל להיות חכם", "השתדל להיות מנהיג", "השתדל להיות שקט"], "answer": 0}, {"q": "לא עליך המלאכה לגמור, ___", "speaker": "רבי טרפון", "options": ["ולא אתה בן חורין להבטל ממנה", "ולא אתה רשאי לעזוב אותה", "ולא אתה צריך להשלימה", "ולא אתה יכול להתחמק ממנה"], "answer": 0}, {"q": "הכל צפוי, ___", "speaker": "רבי עקיבה", "options": ["והרשות נתונה, ובטוב העולם נדון, והכל לפי רוב המעשה", "והגורל קבוע, ובצדק העולם נשפט, והכל לפי רצון האדם", "והעתיד נגלה, ובאמת העולם נבחן, והכל לפי רוב המחשבה", "והרשות אסורה, ובשכר העולם נדון, והכל לפי רוב הזמן"], "answer": 0}, {"q": "איזהו חכם? ___", "speaker": "בן זומא", "options": ["הלומד מכל אדם", "היודע את כל התורה", "השומע לחכמים", "המבין את העולם"], "answer": 0}, {"q": "אל תפרוש מן הציבור, ___", "speaker": "הלל", "options": ["ואל תאמין בעצמך עד יום מותך", "ואל תסמוך על חברך עד יום פטירתך", "ואל תבטח ברשות עד יום בחירתך", "ואל תלך לבדך עד יום זקנתך"], "answer": 0}, {"q": "אל תרצה את חברך בשעת כעסו, ___", "speaker": "רבי שמעון בן אלעזר", "options": ["ואל תנחמו בשעה שמתו מונח לפניו, ואל תשאל לו בעת נדרו, ואל תשתדל לראותו בשעת קלקלתו", "ואל תשאל אותו בשעת עצבו, ואל תבקר אותו בשעת מחלתו, ואל תלך אחריו בשעת טעותו", "ואל תדבר אליו בשעת פחדו, ואל תעזור לו בשעת חולשתו, ואל תזכיר לו בשעת בושתו", "ואל תקנא בו בשעת הצלחתו, ואל תשפוט אותו בשעת כישלונו, ואל תבוז לו בשעת חולשתו"], "answer": 0}, {"q": "הקנאה והתאווה והכבוד ___", "speaker": "רבי אלעזר הקפר", "options": ["מוציאין את האדם מן העולם", "מביאין את האדם לידי חטא", "מרחיקין את האדם מן החברים", "מכבידין את האדם מן הלב"], "answer": 0}, {"q": "אל תהי דן יחידי, ___", "speaker": "רבי ישמעאל בן רבי יוסי", "options": ["שאין דן יחידי אלא אחד", "שאין דן יחידי אלא חכם", "שאין דן יחידי אלא מלך", "שאין דן יחידי אלא צדיק"], "answer": 0}];
+let i=0, score=0, answered=false;
+const el=id=>document.getElementById(id);
+function shuffle(a){for(let j=a.length-1;j>0;j--){const k=Math.floor(Math.random()*(j+1));[a[j],a[k]]=[a[k],a[j]];}return a;}
+function start(){i=0;score=0;el('intro').classList.add('hidden');el('result').classList.add('hidden');el('quiz').classList.remove('hidden');show();}
+function show(){
+ answered=false;
+ const q=QUESTIONS[i];
+ el('qnum').textContent='שאלה '+(i+1)+' מתוך '+QUESTIONS.length;
+ el('quote').textContent=q.q;
+ el('speaker').textContent='— '+q.speaker;
+ el('feedback').textContent='';
+ el('next').style.display='none';
+ el('bar').style.width=(i/QUESTIONS.length*100)+'%';
+ const opts=el('options');opts.innerHTML='';
+ const order=shuffle(q.options.map((t,idx)=>({t,correct:idx===0})));
+ order.forEach(o=>{
+  const b=document.createElement('button');
+  b.className='opt';b.textContent=o.t;
+  b.onclick=()=>answer(b,o.correct);
+  opts.appendChild(b);
+ });
+}
+function answer(btn,correct){
+ if(answered)return;answered=true;
+ [...el('options').children].forEach(b=>b.disabled=true);
+ if(correct){btn.classList.add('correct');score++;el('feedback').textContent='נכון מאוד! 🎉';el('feedback').style.color='var(--green)';}
+ else{btn.classList.add('wrong');el('feedback').textContent='לא בדיוק… התשובה הנכונה מסומנת בירוק.';el('feedback').style.color='var(--red)';
+  [...el('options').children].forEach(b=>{if(b.textContent===QUESTIONS[i].options[0])b.classList.add('correct');});}
+ el('next').style.display='inline-block';
+ el('next').textContent=(i===QUESTIONS.length-1)?'לתוצאות 🏁':'לשאלה הבאה ←';
+}
+el('next').onclick=()=>{i++;if(i<QUESTIONS.length)show();else finish();};
+function finish(){
+ el('quiz').classList.add('hidden');el('result').classList.remove('hidden');
+ el('bar').style.width='100%';
+ el('scoreBig').textContent=score+' / '+QUESTIONS.length;
+ let e,t;
+ if(score>=13){e='🏆';t='מדהים! אתה בקיא בפרקי אבות!';}
+ else if(score>=9){e='🌟';t='יפה מאוד! ידע חזק בפרקי אבות.';}
+ else if(score>=6){e='🙂';t='כל הכבוד – עוד קצת חזרה ותגיע רחוק.';}
+ else{e='📚';t='לא נורא – זו דרך נהדרת להכיר את המשפטים!';}
+ el('resultEmoji').textContent=e;el('resultText').textContent=t;
+}
+el('start').onclick=start;el('again').onclick=start;
+</script>
+</body>
+</html>
